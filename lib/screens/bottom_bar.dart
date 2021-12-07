@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pizza_angela_store/consts/my_icons.dart';
 import 'package:pizza_angela_store/screens/search.dart';
 import 'package:pizza_angela_store/screens/user_info.dart';
 
@@ -13,19 +14,13 @@ class BottomBarScreen extends StatefulWidget {
 }
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
-  // Initializing the screens in order to display them
-  /*List _pages = [
-    HomeScreen(),
-    FeedScreen(),
-    SearchScreen(),
-    CartScreen(),
-    UserInfoScreen()
-  ];*/
-  var _pages;
 
   // We need an index in order to know which page we are displaying
   int _selectedIndex = 0;
 
+  var _pages;
+
+  // Initializing the screens in order to display them
   @override
   void initState() {
     _pages = [
@@ -82,12 +77,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             currentIndex: _selectedIndex,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(MyAppIcons.home),
                 tooltip: 'Home',
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.rss_feed),
+                icon: Icon(MyAppIcons.rss),
                 tooltip: 'Feeds',
                 label: 'Feeds',
               ),
@@ -98,12 +93,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 label: 'Search',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
+                icon: Icon(MyAppIcons.cart),
                 tooltip: 'Cart',
                 label: 'Cart',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person),
+                icon: Icon(MyAppIcons.user),
                 tooltip: 'User',
                 label: 'User',
               ),
@@ -115,7 +110,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       floatingActionButton: FloatingActionButton(backgroundColor: Colors.purple,
         tooltip: 'Search',
         elevation: 5,
-        child: (Icon(Icons.search)),
+        child: (Icon(MyAppIcons.search)),
         onPressed: () {
           setState(() {
             _selectedIndex = 2;
