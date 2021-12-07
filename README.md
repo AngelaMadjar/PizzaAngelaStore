@@ -1,4 +1,4 @@
-# pizza_angela_store
+# Pizza Angela Store
 
 A new Flutter project.
 
