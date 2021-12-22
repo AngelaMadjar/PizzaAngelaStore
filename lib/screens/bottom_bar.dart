@@ -15,6 +15,7 @@ class BottomBarScreen extends StatefulWidget {
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
 
+  //late List<Map<String,Object>> _pages;
   // We need an index in order to know which page we are displaying
   int _selectedIndex = 0;
 
@@ -93,7 +94,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 label: 'Search',
               ),
               BottomNavigationBarItem(
-                icon: Icon(MyAppIcons.cart),
+                icon: Icon(MyAppIcons.bag),
                 tooltip: 'Cart',
                 label: 'Cart',
               ),
@@ -106,17 +107,23 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: FloatingActionButton(backgroundColor: Colors.purple,
-        tooltip: 'Search',
-        elevation: 5,
-        child: (Icon(MyAppIcons.search)),
-        onPressed: () {
-          setState(() {
-            _selectedIndex = 2;
-          });
-        }
-        ),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton:
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FloatingActionButton(
+          backgroundColor: Colors.purple,
+          tooltip: 'Search',
+          elevation: 5,
+          child: (Icon(MyAppIcons.search)),
+          onPressed: () {
+            setState(() {
+              _selectedIndex = 2;
+            });
+          }
+          ),
+      ),
     );
   }
 }

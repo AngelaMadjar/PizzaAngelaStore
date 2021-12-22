@@ -1,32 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:pizza_angela_store/inner_screens/product_details.dart';
+import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
 import 'package:pizza_angela_store/screens/bottom_bar.dart';
+import 'package:pizza_angela_store/consts/theme_data.dart';
+import 'package:pizza_angela_store/screens/cart.dart';
+import 'package:pizza_angela_store/screens/feeds.dart';
+import 'package:pizza_angela_store/screens/wishlist.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  //const MyApp({Key? key}) : super(key: key);
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> {
+  DarkThemeProvider themeChangeProvider = DarkThemeProvider();
+
+  void getCurrentAppTheme() async{
+  themeChangeProvider.darkTheme =
+    await themeChangeProvider.darkThemePreferences.getTheme();
+  }
+  @override
+  void initState() {
+    getCurrentAppTheme();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: BottomBarScreen(),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) {
+            return themeChangeProvider;
+          })
+        ],
+        child:
+            Consumer<DarkThemeProvider>(builder: (context, themeData, child) {
+          return MaterialApp(
+            title: 'Pizza Angela Struga',
+            theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+            home: BottomBarScreen(),
+            //initialRoute: '/',
+            routes: {
+              //   '/': (ctx) => LandingPage(),
+            //  BrandNavigationRailScreen.routeName: (ctx) =>
+                 // BrandNavigationRailScreen(),
+              CartScreen.routeName: (ctx) => CartScreen(),
+              FeedScreen.routeName: (ctx) => FeedScreen(),
+             WishlistScreen.routeName: (ctx) => WishlistScreen(),
+              ProductDetails.routeName: (ctx) => ProductDetails(),
+            },
+
+          );
+        }));
   }
 }
 
