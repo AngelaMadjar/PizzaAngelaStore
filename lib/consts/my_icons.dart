@@ -11,8 +11,4 @@ class MyAppIcons {
   static IconData trash = Feather.trash;
   static IconData wishlist = Feather.heart;
   static IconData upload = Feather.upload;
-
-
-
-
 }

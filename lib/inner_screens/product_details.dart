@@ -6,6 +6,7 @@ import 'package:pizza_angela_store/consts/my_icons.dart';
 import 'package:pizza_angela_store/models/product.dart';
 //import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
+import 'package:pizza_angela_store/provider/products.dart';
 //import 'package:pizza_angela_store/provider/favs_provider.dart';
 //import 'package:pizza_angela_store/provider/products.dart';
 import 'package:pizza_angela_store/screens/cart.dart';
@@ -27,73 +28,16 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   GlobalKey previewContainer = new GlobalKey();
 
-  //privremena baza na produkti
-  final List<Product> _products = [
-    Product(
-        id:'Product1',
-        title: 'pizza1',
-        description: 'mnogu uba pizzaaaaaaaaaaa',
-        price: 23.99,
-        imageUrl:'url',
-        productCategoryName: 'Pizza',
-        quantity: 10,
-        isFavorite: false,
-        isPopular: false),
-    Product(
-        id:'Product2',
-        title: 'pizza2',
-        description: 'mnogu uba pizzaaaaaaaaaaa',
-        price: 23.99,
-        imageUrl:'url',
-        productCategoryName: 'Pizza',
-        quantity: 12,
-        isFavorite: false,
-        isPopular: false),
-    Product(
-        id:'Product3',
-        title: 'pizza3',
-        description: 'mnogu uba pizzaaaaaaaaaaa',
-        price: 23.99,
-        imageUrl:'url',
-        productCategoryName: 'Pizza',
-        quantity: 12,
-        isFavorite: false,
-        isPopular: false),
-    Product(
-        id:'Product4',
-        title: 'pizza4',
-        description: 'mnogu uba pizzaaaaaaaaaaa',
-        price: 23.99,
-        imageUrl:'url',
-        productCategoryName: 'Pizza',
-        quantity: 12,
-        isFavorite: false,
-        isPopular: false),
-    Product(
-        id:'Product5',
-        title: 'pizza5',
-        description: 'mnogu uba pizzaaaaaaaaaaa',
-        price: 23.99,
-        imageUrl:'url',
-        productCategoryName: 'Pizza',
-        quantity: 12,
-        isFavorite: false,
-        isPopular: false),
-    Product(
-        id:'Product6',
-        title: 'pizza6',
-        description: 'mnogu uba pizzaaaaaaaaaaa',
-        price: 23.99,
-        imageUrl:'url',
-        productCategoryName: 'Pizza',
-        quantity: 12,
-        isFavorite: false,
-        isPopular: false),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
+    final productsProvider = Provider.of<Products>(context);
+    List<Product> _products = productsProvider.products;
+
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final prodAttr = productsProvider.findById(productId);
 
     return Scaffold(
       body: Stack(
@@ -103,7 +47,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             height: MediaQuery.of(context).size.height * 0.45,
             width: double.infinity,
             child: Image.network(
-              'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimagesvc.meredithcorp.io%2Fv3%2Fmm%2Fimage%3Furl%3Dhttps%253A%252F%252Fstatic.onecms.io%252Fwp-content%252Fuploads%252Fsites%252F9%252F2021%252F06%252F15%252Fmozzarella-pizza-margherita-FT-RECIPE0621.jpg&q=85',
+              prodAttr.imageUrl,
             ),
           ),
           SingleChildScrollView(
@@ -166,7 +110,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Container(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Text(
-                                'title',
+                                prodAttr.title,
                                 maxLines: 2,
                                 style: TextStyle(
                                   // color: Theme.of(context).textSelectionColor,
@@ -179,7 +123,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               height: 8,
                             ),
                             Text(
-                              'US \$ 12 }',
+                              'US \$ ${prodAttr.price}',
                               style: TextStyle(
                                   color: themeState.darkTheme
                                       ? Theme.of(context).disabledColor
@@ -204,7 +148,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          'descriptionnnnn',
+                          prodAttr.description,
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 21.0,
@@ -223,10 +167,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           height: 1,
                         ),
                       ),
-                      _details(themeState.darkTheme, 'Brand: ', 'Nesto'),
-                      _details(themeState.darkTheme, 'Quantity: ', '10'),
-                      _details(themeState.darkTheme, 'Category: ', 'Kategorija'),
-                      _details(themeState.darkTheme, 'Popularity: ', 'very popular'),
+                      _details(themeState.darkTheme, 'Quantity: ', '${prodAttr.quantity}'),
+                      _details(themeState.darkTheme, 'Category: ', prodAttr.productCategoryName),
+                      _details(themeState.darkTheme, 'Popularity: ', prodAttr.isPopular ? 'Popular' : 'Not popular'),
                       SizedBox(
                         height: 15,
                       ),
@@ -299,14 +242,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                     itemCount: 7,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctx, int index) {
-                      return FeedProducts(
-                        id: _products[index].id,
-                        description: _products[index].description,
-                        price: _products[index].price,
-                        imageUrl: _products[index].imageUrl,
-                        quantity: _products[index].quantity,
-                        isFavorite: _products[index].isFavorite,
-                      );
+                      return ChangeNotifierProvider.value(
+                          value: _products[index], child: FeedProducts());
                     },
                   ),
                 ),

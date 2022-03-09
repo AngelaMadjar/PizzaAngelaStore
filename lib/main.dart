@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pizza_angela_store/inner_screens/categories_feed.dart';
 import 'package:pizza_angela_store/inner_screens/product_details.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
+import 'package:pizza_angela_store/provider/products.dart';
 import 'package:pizza_angela_store/screens/bottom_bar.dart';
 import 'package:pizza_angela_store/consts/theme_data.dart';
 import 'package:pizza_angela_store/screens/cart.dart';
@@ -34,9 +36,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (_) => Products(),),
+
           ChangeNotifierProvider(create: (_) {
             return themeChangeProvider;
-          })
+          }),
+
         ],
         child:
             Consumer<DarkThemeProvider>(builder: (context, themeData, child) {
@@ -53,6 +58,8 @@ class _MyAppState extends State<MyApp> {
               FeedScreen.routeName: (ctx) => FeedScreen(),
              WishlistScreen.routeName: (ctx) => WishlistScreen(),
               ProductDetails.routeName: (ctx) => ProductDetails(),
+              CategoriesFeedScreen.routeName: (ctx) => CategoriesFeedScreen(),
+
             },
 
           );
