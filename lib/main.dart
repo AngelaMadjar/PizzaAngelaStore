@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_angela_store/inner_screens/categories_feed.dart';
 import 'package:pizza_angela_store/inner_screens/product_details.dart';
+import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
 import 'package:pizza_angela_store/provider/products.dart';
 import 'package:pizza_angela_store/screens/bottom_bar.dart';
@@ -41,6 +42,9 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) {
             return themeChangeProvider;
           }),
+
+          ChangeNotifierProvider(create: (_) => CartProvider(),),
+
 
         ],
         child:

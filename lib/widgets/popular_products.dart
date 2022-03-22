@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:pizza_angela_store/inner_screens/product_details.dart';
 import 'package:pizza_angela_store/models/product.dart';
+import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 class PopularProducts extends StatelessWidget {
@@ -18,6 +19,7 @@ class PopularProducts extends StatelessWidget {
   Widget build(BuildContext context) {
 
   final productsAttributes = Provider.of<Product>(context);
+  final cartProvider = Provider.of<CartProvider>(context);
 
 
     return Padding(
@@ -110,12 +112,21 @@ class PopularProducts extends StatelessWidget {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: (){},
+                              onTap: cartProvider.getCartItems.containsKey(productsAttributes.id) ? (){}
+                                  : () {
+                                cartProvider.addProductToCart(
+                                    productsAttributes.id,
+                                    productsAttributes.price,
+                                    productsAttributes.title,
+                                    productsAttributes.imageUrl);
+                              },
                               borderRadius: BorderRadius.circular(30.0),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
-                                  MaterialCommunityIcons.cart_plus,
+                                  //ako e vekje dodaden ne ja pokazuvaj kosnickata tuku druga ikona
+                                  cartProvider.getCartItems.containsKey(productsAttributes.id) ? MaterialCommunityIcons.check_all
+                                      : MaterialCommunityIcons.cart_plus,
                                   size:25,
                                   color: Colors.black,
                                 ),

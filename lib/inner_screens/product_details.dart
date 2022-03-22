@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:pizza_angela_store/consts/colors.dart';
 import 'package:pizza_angela_store/consts/my_icons.dart';
 import 'package:pizza_angela_store/models/product.dart';
+import 'package:pizza_angela_store/provider/cart_provider.dart';
 //import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
 import 'package:pizza_angela_store/provider/products.dart';
@@ -32,8 +33,12 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+
+    //provider za add to cart
+    final cartProvider = Provider.of<CartProvider>(context);
+
     final themeState = Provider.of<DarkThemeProvider>(context);
-    final productsProvider = Provider.of<Products>(context);
+    final productsProvider = Provider.of<Products>(context, listen: false);
     List<Product> _products = productsProvider.products;
 
     final productId = ModalRoute.of(context)!.settings.arguments as String;
@@ -340,9 +345,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                       shape: RoundedRectangleBorder(side: BorderSide.none),
                       color: Colors.redAccent.shade400,
                       onPressed:
-                          () {},
+                      cartProvider.getCartItems.containsKey(productId) ? (){}
+                          : () {
+                        cartProvider.addProductToCart(
+                            productId,
+                            prodAttr.price,
+                            prodAttr.title,
+                            prodAttr.imageUrl);
+                          },
                       child: Text(
-                            'Add to Cart'.toUpperCase(),
+                            cartProvider.getCartItems.containsKey(productId) ? 'In cart' : 'Add to Cart'.toUpperCase(),
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
