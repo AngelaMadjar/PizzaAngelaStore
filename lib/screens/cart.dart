@@ -50,10 +50,7 @@ class CartScreen extends StatelessWidget {
                       () => cartProvider.clearCart(),context);
           },
           icon: Icon(MyAppIcons.trash,color: Colors.black,),
-
           )
-
-
           ],
         ),
 

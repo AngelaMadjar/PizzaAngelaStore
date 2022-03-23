@@ -144,8 +144,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       child: InkWell(
                         splashColor: Theme.of(context).splashColor,
                         child: ListTile(
-                          onTap: () => Navigator.of(context).pushNamed(
-                            CartScreen.routeName),
+                          onTap: () => {Navigator.of(context).pushNamed(
+                          CartScreen.routeName)},
                           title: Text('Cart'),
                           trailing: Icon(Icons.chevron_right_rounded),
                           leading: Icon(MyAppIcons.cart),

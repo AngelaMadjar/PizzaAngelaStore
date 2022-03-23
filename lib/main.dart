@@ -3,6 +3,7 @@ import 'package:pizza_angela_store/inner_screens/categories_feed.dart';
 import 'package:pizza_angela_store/inner_screens/product_details.dart';
 import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
+import 'package:pizza_angela_store/provider/favs_provider.dart';
 import 'package:pizza_angela_store/provider/products.dart';
 import 'package:pizza_angela_store/screens/bottom_bar.dart';
 import 'package:pizza_angela_store/consts/theme_data.dart';
@@ -45,6 +46,7 @@ class _MyAppState extends State<MyApp> {
 
           ChangeNotifierProvider(create: (_) => CartProvider(),),
 
+          ChangeNotifierProvider(create: (_) => FavsProvider(),),
 
         ],
         child:

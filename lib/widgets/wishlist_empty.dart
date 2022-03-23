@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_angela_store/consts/colors.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
+import 'package:pizza_angela_store/screens/feeds.dart';
 import 'package:provider/provider.dart';
 
 class WishlistEmpty extends StatelessWidget {
@@ -46,7 +47,7 @@ class WishlistEmpty extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.06,
           child: RaisedButton(
-            onPressed: () {},
+            onPressed: () {Navigator.of(context).pushNamed(FeedScreen.routeName);},
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(color: Colors.red)),

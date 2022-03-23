@@ -7,6 +7,7 @@ import 'package:pizza_angela_store/models/product.dart';
 import 'package:pizza_angela_store/provider/cart_provider.dart';
 //import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
+import 'package:pizza_angela_store/provider/favs_provider.dart';
 import 'package:pizza_angela_store/provider/products.dart';
 //import 'package:pizza_angela_store/provider/favs_provider.dart';
 //import 'package:pizza_angela_store/provider/products.dart';
@@ -38,11 +39,15 @@ class _ProductDetailsState extends State<ProductDetails> {
     final cartProvider = Provider.of<CartProvider>(context);
 
     final themeState = Provider.of<DarkThemeProvider>(context);
+
     final productsProvider = Provider.of<Products>(context, listen: false);
     List<Product> _products = productsProvider.products;
 
     final productId = ModalRoute.of(context)!.settings.arguments as String;
+
     final prodAttr = productsProvider.findById(productId);
+
+    final favsProvider = Provider.of<FavsProvider>(context);
 
     return Scaffold(
       body: Stack(
@@ -399,12 +404,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     height: 50,
                     child: InkWell(
                       splashColor: ColorsConsts.favColor,
-                      onTap: () {},
+                      onTap: () {
+                        favsProvider.addAndRmoveFromFav(productId, prodAttr.price, prodAttr.title, prodAttr.imageUrl);
+                      },
                       child: Center(
                         child: Icon(
-                           Icons.favorite,
-                          color:
-                          Colors.red,
+                          favsProvider.getFavsItems.containsKey(productId) ? Icons.favorite : MyAppIcons.wishlist,
+                          color: favsProvider.getFavsItems.containsKey(productId) ? Colors.red : ColorsConsts.white,
                         ),
                       ),
                     ),
