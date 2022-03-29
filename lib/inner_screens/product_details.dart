@@ -1,27 +1,19 @@
-import 'package:flutter/material.dart';
-
 import 'dart:ui';
+import 'package:badges/badges.dart';
+import 'package:flutter/material.dart';
 import 'package:pizza_angela_store/consts/colors.dart';
 import 'package:pizza_angela_store/consts/my_icons.dart';
-import 'package:pizza_angela_store/models/product.dart';
 import 'package:pizza_angela_store/provider/cart_provider.dart';
-//import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
 import 'package:pizza_angela_store/provider/favs_provider.dart';
 import 'package:pizza_angela_store/provider/products.dart';
-//import 'package:pizza_angela_store/provider/favs_provider.dart';
-//import 'package:pizza_angela_store/provider/products.dart';
 import 'package:pizza_angela_store/screens/cart.dart';
 import 'package:pizza_angela_store/screens/wishlist.dart';
 import 'package:pizza_angela_store/widgets/feeds_products.dart';
-import 'package:badges/badges.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetails extends StatefulWidget {
   static const routeName = '/ProductDetails';
-
-
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
@@ -30,25 +22,17 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   GlobalKey previewContainer = new GlobalKey();
 
-
-
   @override
   Widget build(BuildContext context) {
-
-    //provider za add to cart
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final productsData = Provider.of<Products>(context, listen: false);
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
     final cartProvider = Provider.of<CartProvider>(context);
 
-    final themeState = Provider.of<DarkThemeProvider>(context);
-
-    final productsProvider = Provider.of<Products>(context, listen: false);
-    List<Product> _products = productsProvider.products;
-
-    final productId = ModalRoute.of(context)!.settings.arguments as String;
-
-    final prodAttr = productsProvider.findById(productId);
-
     final favsProvider = Provider.of<FavsProvider>(context);
-
+    print('productId $productId');
+    final prodAttr = productsData.findById(productId);
+    final productsList = productsData.products;
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -177,9 +161,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                           height: 1,
                         ),
                       ),
-                      _details(themeState.darkTheme, 'Quantity: ', '${prodAttr.quantity}'),
-                      _details(themeState.darkTheme, 'Category: ', prodAttr.productCategoryName),
-                      _details(themeState.darkTheme, 'Popularity: ', prodAttr.isPopular ? 'Popular' : 'Not popular'),
+                      _details(themeState.darkTheme, 'Quantity: ',
+                          '${prodAttr.quantity}'),
+                      _details(themeState.darkTheme, 'Category: ',
+                          prodAttr.productCategoryName),
+                      _details(themeState.darkTheme, 'Popularity: ',
+                          prodAttr.isPopular ? 'Popular' : 'Barely known'),
                       SizedBox(
                         height: 15,
                       ),
@@ -253,7 +240,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctx, int index) {
                       return ChangeNotifierProvider.value(
-                          value: _products[index], child: FeedProducts());
+                          value: productsList[index], child: FeedProducts());
                     },
                   ),
                 ),
@@ -269,31 +256,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "DETAILS",
+                  "DETAIL",
                   style:
                   TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                 ),
                 actions: <Widget>[
-                  IconButton(
-                  icon: Icon(
-                    MyAppIcons.wishlist,
-                    color: ColorsConsts.favColor,
-                  ),
-                    onPressed: (){
-                    Navigator.of(context).pushNamed(WishlistScreen.routeName);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      MyAppIcons.cart,
-                      color: ColorsConsts.cartColor,
-                    ),
-                    onPressed: (){
-                      Navigator.of(context).pushNamed(CartScreen.routeName);
-                    },
-                  ),
-
-                  /*Consumer<FavsProvider>(
+                  Consumer<FavsProvider>(
                     builder: (_, favs, ch) => Badge(
                       badgeColor: ColorsConsts.cartBadgeColor,
                       animationType: BadgeAnimationType.slide,
@@ -314,8 +282,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         },
                       ),
                     ),
-                  ),*/
-                  /*Consumer<CartProvider>(
+                  ),
+                  Consumer<CartProvider>(
                     builder: (_, cart, ch) => Badge(
                       badgeColor: ColorsConsts.cartBadgeColor,
                       animationType: BadgeAnimationType.slide,
@@ -335,7 +303,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         },
                       ),
                     ),
-                  )*/
+                  ),
                 ]),
           ),
           Align(
@@ -350,16 +318,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                       shape: RoundedRectangleBorder(side: BorderSide.none),
                       color: Colors.redAccent.shade400,
                       onPressed:
-                      cartProvider.getCartItems.containsKey(productId) ? (){}
+                      cartProvider.getCartItems.containsKey(productId)
+                          ? () {}
                           : () {
                         cartProvider.addProductToCart(
                             productId,
                             prodAttr.price,
                             prodAttr.title,
                             prodAttr.imageUrl);
-                          },
+                      },
                       child: Text(
-                            cartProvider.getCartItems.containsKey(productId) ? 'In cart' : 'Add to Cart'.toUpperCase(),
+                        cartProvider.getCartItems.containsKey(productId)
+                            ? 'In cart'
+                            : 'Add to Cart'.toUpperCase(),
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
@@ -405,12 +376,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: InkWell(
                       splashColor: ColorsConsts.favColor,
                       onTap: () {
-                        favsProvider.addAndRmoveFromFav(productId, prodAttr.price, prodAttr.title, prodAttr.imageUrl);
+                        favsProvider.addAndRmoveFromFav(productId,
+                            prodAttr.price, prodAttr.title, prodAttr.imageUrl);
                       },
                       child: Center(
                         child: Icon(
-                          favsProvider.getFavsItems.containsKey(productId) ? Icons.favorite : MyAppIcons.wishlist,
-                          color: favsProvider.getFavsItems.containsKey(productId) ? Colors.red : ColorsConsts.white,
+                          favsProvider.getFavsItems.containsKey(productId)
+                              ? Icons.favorite
+                              : MyAppIcons.wishlist,
+                          color:
+                          favsProvider.getFavsItems.containsKey(productId)
+                              ? Colors.red
+                              : ColorsConsts.white,
                         ),
                       ),
                     ),

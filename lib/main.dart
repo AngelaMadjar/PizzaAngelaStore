@@ -5,12 +5,18 @@ import 'package:pizza_angela_store/provider/cart_provider.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
 import 'package:pizza_angela_store/provider/favs_provider.dart';
 import 'package:pizza_angela_store/provider/products.dart';
+import 'package:pizza_angela_store/screens/auth/login.dart';
+import 'package:pizza_angela_store/screens/auth/signup.dart';
 import 'package:pizza_angela_store/screens/bottom_bar.dart';
 import 'package:pizza_angela_store/consts/theme_data.dart';
 import 'package:pizza_angela_store/screens/cart.dart';
 import 'package:pizza_angela_store/screens/feeds.dart';
+import 'package:pizza_angela_store/screens/landing_page.dart';
+import 'package:pizza_angela_store/screens/main_screen.dart';
 import 'package:pizza_angela_store/screens/wishlist.dart';
 import 'package:provider/provider.dart';
+
+import 'inner_screens/upload_product_form.dart';
 
 void main() {
   runApp(MyApp());
@@ -54,7 +60,7 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: 'Pizza Angela Struga',
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-            home: BottomBarScreen(),
+            home: MainScreens(),
             //initialRoute: '/',
             routes: {
               //   '/': (ctx) => LandingPage(),
@@ -62,9 +68,13 @@ class _MyAppState extends State<MyApp> {
                  // BrandNavigationRailScreen(),
               CartScreen.routeName: (ctx) => CartScreen(),
               FeedScreen.routeName: (ctx) => FeedScreen(),
-             WishlistScreen.routeName: (ctx) => WishlistScreen(),
+              WishlistScreen.routeName: (ctx) => WishlistScreen(),
               ProductDetails.routeName: (ctx) => ProductDetails(),
               CategoriesFeedScreen.routeName: (ctx) => CategoriesFeedScreen(),
+              LoginScreen.routeName: (ctx) => LoginScreen(),
+              SignUpScreen.routeName: (ctx) => SignUpScreen(),
+              BottomBarScreen.routeName: (ctx) => BottomBarScreen(),
+              UploadProductForm.routeName: (ctx) => UploadProductForm(),
 
             },
 
