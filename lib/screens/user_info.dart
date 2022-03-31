@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/icon_data.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
@@ -18,14 +20,51 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   bool _value = false;
   ScrollController _scrollController = ScrollController();
   var top = 0.0;
-  
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+   String? _uid;
+   String? _name;
+   String? _email;
+   String? _joinedAt;
+   int? _phoneNumber;
+   String? _userImageUrl;
+
   @override
   void  initState(){
     super.initState();
     _scrollController = ScrollController();
-    _scrollController.addListener(() {setState(() {
+    _scrollController.addListener(() {
+      setState(() {
 
     });});
+    getData();
+
+  }
+
+  //GET DATA ABOUT USER FROM DATABASE
+  void getData() async {
+
+    User? user = _auth.currentUser;
+    _uid = user!.uid;
+
+    //logs for checking if it works
+    print('user.displayName ${user.displayName}');
+    print('user.photoURL ${user.photoURL}');
+
+    final DocumentSnapshot userDoc =  await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_uid).get();
+
+    if(userDoc == null){
+      return;
+    }
+
+      setState(() {
+        _name = userDoc.get('name');
+        _email = user.email!;
+        _joinedAt = userDoc.get('joinedAt');
+        _phoneNumber = userDoc.get('phoneNumber');
+        _userImageUrl = userDoc.get('imageUrl');
+      });
   }
 
   @override
@@ -86,7 +125,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                     image: DecorationImage(
                                       fit: BoxFit.fill,
                                       image: NetworkImage(
-                                          'https://cdn1.vectorstock.com/i/thumb-large/62/60/default-avatar-photo-placeholder-profile-image-vector-21666260.jpg'),
+                                         _userImageUrl!=null ? _userImageUrl.toString() : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                                     ),
                                   ),
                                 ),
@@ -95,7 +134,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ),
                                 Text(
                                   // 'top.toString()',
-                                  'Guest',
+                                  _name != null ? _name.toString() :'Guest',
                                   style: TextStyle(
                                       fontSize: 20.0, color: Colors.white),
                                 ),
@@ -106,7 +145,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       ),
                       background: Image(
                         image: NetworkImage(
-                            'https://cdn1.vectorstock.com/i/thumb-large/62/60/default-avatar-photo-placeholder-profile-image-vector-21666260.jpg'),
+                            _userImageUrl!=null ? _userImageUrl.toString() :  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -159,10 +198,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       thickness: 1,
                       color: Colors.grey,
                     ),
-                    userListTile('Email', 'Email sub', 0, context),
-                    userListTile('Phone number', '4555', 1, context),
+                    userListTile('Email', _email != null ? _email.toString() : '',0 , context),
+                    userListTile('Phone number',  _phoneNumber != null ? _phoneNumber.toString() : '', 1, context),
                     userListTile('Shipping address', '', 2, context),
-                    userListTile('joined date', 'date', 3, context),
+                    userListTile('joined date',  _joinedAt != null ? _joinedAt.toString() : '', 3, context),
+                    userListTileLocation('Location', 'Click for current location', 5, context),
+
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: userTitle('User settings'),
@@ -190,7 +231,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         splashColor: Theme.of(context).splashColor,
                         child: ListTile(
                             onTap: () {
-                              Navigator.canPop(context) ? Navigator.pop(context) : null;
+                             // Navigator.canPop(context) ? Navigator.pop(context) : null;
+                            _auth.signOut();
                             },
                             title: Text('Logout'),
                             leading: Icon(Icons.exit_to_app_rounded),
@@ -213,7 +255,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     Icons.phone,
     Icons.local_shipping,
     Icons.watch_later,
-    Icons.exit_to_app_rounded
+    Icons.exit_to_app_rounded,
+    Icons.location_pin,
   ];
 
   Widget userListTile(
@@ -224,6 +267,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         splashColor: Theme.of(context).splashColor,
         child: ListTile(
             onTap: () {},
+            title: Text(title),
+            subtitle: Text(subtitles),
+            leading: Icon(_userTileIcons[index])),
+      ),
+    );
+  }
+
+  Widget userListTileLocation(
+      String title, String subtitles, int index, BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        splashColor: Theme.of(context).splashColor,
+        child: ListTile(
+            onTap: () {
+              //OVDE POKAZI LOKACIJA KOGA KE CLICK
+
+              Navigator.of(context).pushNamed(
+                  WishlistScreen.routeName
+              );
+            },
             title: Text(title),
             subtitle: Text(subtitles),
             leading: Icon(_userTileIcons[index])),

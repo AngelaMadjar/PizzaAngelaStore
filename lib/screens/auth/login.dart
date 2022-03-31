@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:pizza_angela_store/consts/colors.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
+
+import '../../services/global_methods.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/LoginScreen';
@@ -16,17 +19,41 @@ class _LoginScreenState extends State<LoginScreen> {
   String _emailAddress = '';
   String _password = '';
   final _formKey = GlobalKey<FormState>();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  GlobalMethods _globalMethods = GlobalMethods();
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _passwordFocusNode.dispose();
     super.dispose();
   }
 
-  void _submitForm() {
+  //LOG IN
+  void _submitForm() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (isValid) {
+      setState(() {
+        _isLoading=true;
+      });
       _formKey.currentState!.save();
+
+      try {
+        await _auth.signInWithEmailAndPassword(
+            email: _emailAddress.toLowerCase().trim(),
+            password: _password.trim())
+            .then((value) => Navigator.canPop(context) ? Navigator.pop(context) : null);
+      } catch (error) {
+        _globalMethods.authErrorHandle(error.toString(), context);
+        print('error occured ${error.toString()}');
+      }
+      finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -148,7 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           SizedBox(width: 10),
-                          ElevatedButton(
+                         _isLoading ? CircularProgressIndicator()
+                             : ElevatedButton(
                               style: ButtonStyle(
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(

@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         //BACKDROP SCAFFOLD
           child: BackdropScaffold(
-            frontLayerBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+           frontLayerBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
             headerHeight: MediaQuery.of(context).size.height*0.25,
         appBar: BackdropAppBar(
           title: const Text("Home"),

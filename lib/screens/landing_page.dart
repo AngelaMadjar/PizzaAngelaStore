@@ -1,9 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:pizza_angela_store/consts/colors.dart';
 import 'package:pizza_angela_store/screens/bottom_bar.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
+
+import '../services/global_methods.dart';
 import 'auth/login.dart';
 import 'auth/signup.dart';
 
@@ -22,6 +27,11 @@ class _LandingPageState extends State<LandingPage>
     'https://images.pexels.com/photos/2532006/pexels-photo-2532006.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     'https://images.pexels.com/photos/4253128/pexels-photo-4253128.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   ];
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  GlobalMethods _globalMethods = GlobalMethods();
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +57,67 @@ class _LandingPageState extends State<LandingPage>
     _animationController.dispose();
     super.dispose();
   }
+
+  //GOOGLE SIGN IN
+  Future<void> _googleSignIn() async{
+    final googleSignIn = GoogleSignIn();
+    final googleAccount = await googleSignIn.signIn();
+
+    if(googleAccount!=null){
+      final googleAuth = await googleAccount.authentication;
+        if(googleAuth.accessToken!=null && googleAuth.idToken!=null){
+
+         try{
+           //initialize a date for fulfilling the 'joinedAt' field at the database
+           var date = DateTime.now().toString();
+           var dateParse = DateTime.parse(date);
+           var formattedDate = "${dateParse.day}-${dateParse.month}-${dateParse.year}";
+
+           final authResult = await _auth.signInWithCredential(
+               GoogleAuthProvider.credential(
+                   accessToken: googleAuth.accessToken ,
+                   idToken: googleAuth.idToken));
+           // ACCESS THE FIRESTORE (nosqsl database) to add new User to the collection
+           await FirebaseFirestore.instance.collection('users').doc(authResult.user?.uid).set({
+             'id': authResult.user?.uid,
+             'name': authResult.user?.displayName,
+             'email': authResult.user?.email,
+             'phoneNumber': authResult.user?.phoneNumber,
+             'imageUrl': authResult.user?.photoURL,
+             'joinedAt': formattedDate,
+             'createdAt':Timestamp.now(),
+           });
+
+
+         }catch(error){
+           _globalMethods.authErrorHandle(error.toString(), context);
+         }
+        }
+    }
+
+  }
+
+
+  //ANONIMOUSLY SIGN IN
+  void _loginAnonymously() async {
+
+    setState(() {
+      _isLoading=true;
+    });
+
+    try {
+      await _auth.signInAnonymously();
+    } catch (error) {
+      _globalMethods.authErrorHandle(error.toString(), context);
+      print('error occured ${error.toString()}');
+    }
+    finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -205,15 +276,18 @@ class _LandingPageState extends State<LandingPage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   OutlineButton(
-                    onPressed: () {},
+                    onPressed: _googleSignIn,
                     shape: StadiumBorder(),
                     highlightedBorderColor: Colors.red.shade200,
                     borderSide: BorderSide(width: 2, color: Colors.red),
                     child: Text('Google +'),
                   ),
-                  OutlineButton(
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : OutlineButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, BottomBarScreen.routeName);
+                     _loginAnonymously();
+                      // Navigator.pushNamed(context, BottomBarScreen.routeName);
                     },
                     shape: StadiumBorder(),
                     highlightedBorderColor: Colors.deepPurple.shade200,

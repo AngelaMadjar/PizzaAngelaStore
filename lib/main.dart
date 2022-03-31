@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pizza_angela_store/inner_screens/categories_feed.dart';
 import 'package:pizza_angela_store/inner_screens/product_details.dart';
@@ -13,12 +14,14 @@ import 'package:pizza_angela_store/screens/cart.dart';
 import 'package:pizza_angela_store/screens/feeds.dart';
 import 'package:pizza_angela_store/screens/landing_page.dart';
 import 'package:pizza_angela_store/screens/main_screen.dart';
+import 'package:pizza_angela_store/screens/user_state.dart';
 import 'package:pizza_angela_store/screens/wishlist.dart';
 import 'package:provider/provider.dart';
 
 import 'inner_screens/upload_product_form.dart';
 
-void main() {
+/*void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -40,46 +43,77 @@ class _MyAppState extends State<MyApp> {
     getCurrentAppTheme();
     super.initState();
   }
+
+  //initializer for firebase
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => Products(),),
+    return FutureBuilder<Object>(
+      future: _initialization,
+      builder: (context, snapshot) {
 
-          ChangeNotifierProvider(create: (_) {
-            return themeChangeProvider;
-          }),
-
-          ChangeNotifierProvider(create: (_) => CartProvider(),),
-
-          ChangeNotifierProvider(create: (_) => FavsProvider(),),
-
-        ],
-        child:
-            Consumer<DarkThemeProvider>(builder: (context, themeData, child) {
+        if(snapshot.connectionState == ConnectionState.waiting){
           return MaterialApp(
-            title: 'Pizza Angela Struga',
-            theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-            home: MainScreens(),
-            //initialRoute: '/',
-            routes: {
-              //   '/': (ctx) => LandingPage(),
-            //  BrandNavigationRailScreen.routeName: (ctx) =>
-                 // BrandNavigationRailScreen(),
-              CartScreen.routeName: (ctx) => CartScreen(),
-              FeedScreen.routeName: (ctx) => FeedScreen(),
-              WishlistScreen.routeName: (ctx) => WishlistScreen(),
-              ProductDetails.routeName: (ctx) => ProductDetails(),
-              CategoriesFeedScreen.routeName: (ctx) => CategoriesFeedScreen(),
-              LoginScreen.routeName: (ctx) => LoginScreen(),
-              SignUpScreen.routeName: (ctx) => SignUpScreen(),
-              BottomBarScreen.routeName: (ctx) => BottomBarScreen(),
-              UploadProductForm.routeName: (ctx) => UploadProductForm(),
-
-            },
-
+            home:Scaffold(
+                body:Center(
+                    child:CircularProgressIndicator()
+            )
+            )
           );
-        }));
+        }
+        else if(snapshot.hasError){
+          return MaterialApp(
+              home:Scaffold(
+                  body:Center(
+                      child:Text('Error occured')
+                  )
+              )
+          );
+        }
+
+
+        return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => Products(),),
+
+              ChangeNotifierProvider(create: (_) {
+                return themeChangeProvider;
+              }),
+
+              ChangeNotifierProvider(create: (_) => CartProvider(),),
+
+              ChangeNotifierProvider(create: (_) => FavsProvider(),),
+
+            ],
+            child:
+                Consumer<DarkThemeProvider>(builder: (context, themeData, child) {
+              return MaterialApp(
+                title: 'Pizza Angela Struga',
+                theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+                home: MainScreens(),
+                //initialRoute: '/',
+                routes: {
+                  //   '/': (ctx) => LandingPage(),
+                //  BrandNavigationRailScreen.routeName: (ctx) =>
+                     // BrandNavigationRailScreen(),
+                  CartScreen.routeName: (ctx) => CartScreen(),
+                  FeedScreen.routeName: (ctx) => FeedScreen(),
+                  WishlistScreen.routeName: (ctx) => WishlistScreen(),
+                  ProductDetails.routeName: (ctx) => ProductDetails(),
+                  CategoriesFeedScreen.routeName: (ctx) => CategoriesFeedScreen(),
+                  LoginScreen.routeName: (ctx) => LoginScreen(),
+                  SignUpScreen.routeName: (ctx) => SignUpScreen(),
+                  BottomBarScreen.routeName: (ctx) => BottomBarScreen(),
+                  UploadProductForm.routeName: (ctx) => UploadProductForm(),
+
+                },
+
+              );
+            }));
+      }
+    );
   }
 }
 
@@ -165,5 +199,104 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+*/
+
+
+void main()  {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  DarkThemeProvider themeChangeProvider = DarkThemeProvider();
+
+  void getCurrentAppTheme() async {
+    themeChangeProvider.darkTheme =
+    await themeChangeProvider.darkThemePreferences.getTheme();
+  }
+
+  @override
+  void initState() {
+    getCurrentAppTheme();
+    super.initState();
+  }
+
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyCwVRRfnqNnQAVnwegpUV1rtiWY8I05ZN0",
+      appId: "1:572296690822:android:8c38afa3f6ecaf2e21e507",
+      messagingSenderId: "572296690822",
+      projectId: "pizzaangela-82e5c",
+    ),);
+
+  @override
+  Widget build(BuildContext context)  {
+    return FutureBuilder(
+        future:  _initialization,
+        builder: (context, snapshot) {
+         if (snapshot.connectionState == ConnectionState.waiting) {
+            return MaterialApp(
+              home: Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          }
+           if (snapshot.hasError) {
+            MaterialApp(
+              home: Scaffold(
+                body: Center(
+                  child: Text('Error occured'),
+                ),
+              ),
+            );
+          }
+          return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(create: (_) {
+                  return themeChangeProvider;
+                }),
+                ChangeNotifierProvider(
+                  create: (_) => Products(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => CartProvider(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => FavsProvider(),
+                ),
+              ],
+              child: Consumer<DarkThemeProvider>(
+                  builder: (context, themeData, child) {
+                    return MaterialApp(
+                      title: 'Pizza Angela Struga',
+                      theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+                      home: UserState(),
+                     // initialRoute: '/',
+                      routes: {
+                        //   '/': (ctx) => LandingPage(),
+                        //  BrandNavigationRailScreen.routeName: (ctx) =>
+                        // BrandNavigationRailScreen(),
+                        CartScreen.routeName: (ctx) => CartScreen(),
+                        FeedScreen.routeName: (ctx) => FeedScreen(),
+                        WishlistScreen.routeName: (ctx) => WishlistScreen(),
+                        ProductDetails.routeName: (ctx) => ProductDetails(),
+                        CategoriesFeedScreen.routeName: (ctx) => CategoriesFeedScreen(),
+                        LoginScreen.routeName: (ctx) => LoginScreen(),
+                        SignUpScreen.routeName: (ctx) => SignUpScreen(),
+                        BottomBarScreen.routeName: (ctx) => BottomBarScreen(),
+                        UploadProductForm.routeName: (ctx) => UploadProductForm(),
+                      },
+                    );
+                  }));
+        });
   }
 }

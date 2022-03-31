@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "572296690822",
+    "project_id": "pizzaangela-82e5c",
+    "storage_bucket": "pizzaangela-82e5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572296690822:android:8c38afa3f6ecaf2e21e507",
+        "android_client_info": {
+          "package_name": "com.example.pizza_angela_store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572296690822-8mb3ddpb377fh37ls2okdgshmmmf4bhi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pizza_angela_store",
+            "certificate_hash": "6eff42488101ff477a477bad2c23f28af673e435"
+          }
+        },
+        {
+          "client_id": "572296690822-povof9ns7aie1bgimc4rs0f9472vpvgh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwVRRfnqNnQAVnwegpUV1rtiWY8I05ZN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572296690822-povof9ns7aie1bgimc4rs0f9472vpvgh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
