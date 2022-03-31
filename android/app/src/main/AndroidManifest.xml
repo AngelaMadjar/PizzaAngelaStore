@@ -2,7 +2,11 @@
     package="com.example.pizza_angela_store">
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-   <application
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+
+    <application
         android:label="pizza_angela_store"
         android:icon="@mipmap/ic_launcher">
         <activity

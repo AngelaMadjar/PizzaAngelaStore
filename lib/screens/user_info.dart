@@ -10,6 +10,8 @@ import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
 import 'package:pizza_angela_store/screens/cart.dart';
 import 'package:pizza_angela_store/screens/wishlist.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
+import '../../services/global_methods.dart';
 
 class UserInfoScreen extends StatefulWidget {
   @override
@@ -21,28 +23,26 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   ScrollController _scrollController = ScrollController();
   var top = 0.0;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-   String? _uid;
-   String? _name;
-   String? _email;
-   String? _joinedAt;
-   int? _phoneNumber;
-   String? _userImageUrl;
+  String? _uid;
+  String? _name;
+  String? _email;
+  String? _joinedAt;
+  int? _phoneNumber;
+  String? _userImageUrl;
+  GlobalMethods _globalMethods = GlobalMethods();
 
   @override
-  void  initState(){
+  void initState() {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(() {
-      setState(() {
-
-    });});
+      setState(() {});
+    });
     getData();
-
   }
 
   //GET DATA ABOUT USER FROM DATABASE
   void getData() async {
-
     User? user = _auth.currentUser;
     _uid = user!.uid;
 
@@ -50,21 +50,20 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     print('user.displayName ${user.displayName}');
     print('user.photoURL ${user.photoURL}');
 
-    final DocumentSnapshot userDoc =  await FirebaseFirestore.instance
-        .collection('users')
-        .doc(_uid).get();
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
 
-    if(userDoc == null){
+    if (userDoc == null) {
       return;
     }
 
-      setState(() {
-        _name = userDoc.get('name');
-        _email = user.email!;
-        _joinedAt = userDoc.get('joinedAt');
-        _phoneNumber = userDoc.get('phoneNumber');
-        _userImageUrl = userDoc.get('imageUrl');
-      });
+    setState(() {
+      _name = userDoc.get('name');
+      _email = user.email!;
+      _joinedAt = userDoc.get('joinedAt');
+      _phoneNumber = userDoc.get('phoneNumber');
+      _userImageUrl = userDoc.get('imageUrl');
+    });
   }
 
   @override
@@ -124,8 +123,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
                                       fit: BoxFit.fill,
-                                      image: NetworkImage(
-                                         _userImageUrl!=null ? _userImageUrl.toString() : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
+                                      image: NetworkImage(_userImageUrl != null
+                                          ? _userImageUrl.toString()
+                                          : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                                     ),
                                   ),
                                 ),
@@ -134,7 +134,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 ),
                                 Text(
                                   // 'top.toString()',
-                                  _name != null ? _name.toString() :'Guest',
+                                  _name != null ? _name.toString() : 'Guest',
                                   style: TextStyle(
                                       fontSize: 20.0, color: Colors.white),
                                 ),
@@ -144,8 +144,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         ],
                       ),
                       background: Image(
-                        image: NetworkImage(
-                            _userImageUrl!=null ? _userImageUrl.toString() :  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
+                        image: NetworkImage(_userImageUrl != null
+                            ? _userImageUrl.toString()
+                            : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -169,9 +170,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       child: InkWell(
                         splashColor: Theme.of(context).splashColor,
                         child: ListTile(
-                          onTap: () => Navigator.of(context).pushNamed(
-                              WishlistScreen.routeName
-                          ),
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(WishlistScreen.routeName),
                           title: Text('Wishlist'),
                           trailing: Icon(Icons.chevron_right_rounded),
                           leading: Icon(MyAppIcons.wishlist),
@@ -183,8 +183,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       child: InkWell(
                         splashColor: Theme.of(context).splashColor,
                         child: ListTile(
-                          onTap: () => {Navigator.of(context).pushNamed(
-                          CartScreen.routeName)},
+                          onTap: () => {
+                            Navigator.of(context)
+                                .pushNamed(CartScreen.routeName)
+                          },
                           title: Text('Cart'),
                           trailing: Icon(Icons.chevron_right_rounded),
                           leading: Icon(MyAppIcons.cart),
@@ -198,12 +200,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       thickness: 1,
                       color: Colors.grey,
                     ),
-                    userListTile('Email', _email != null ? _email.toString() : '',0 , context),
-                    userListTile('Phone number',  _phoneNumber != null ? _phoneNumber.toString() : '', 1, context),
+                    userListTile('Email',
+                        _email != null ? _email.toString() : '', 0, context),
+                    userListTile(
+                        'Phone number',
+                        _phoneNumber != null ? _phoneNumber.toString() : '',
+                        1,
+                        context),
                     userListTile('Shipping address', '', 2, context),
-                    userListTile('joined date',  _joinedAt != null ? _joinedAt.toString() : '', 3, context),
-                    userListTileLocation('Location', 'Click for current location', 5, context),
-
+                    userListTile(
+                        'joined date',
+                        _joinedAt != null ? _joinedAt.toString() : '',
+                        3,
+                        context),
+                    userListTileLocation(
+                        'Location', 'Click for current location', 5, context),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: userTitle('User settings'),
@@ -226,19 +237,18 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       title: Text('Dark theme'),
                     ),
                     Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Theme.of(context).splashColor,
-                        child: ListTile(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: Theme.of(context).splashColor,
+                          child: ListTile(
                             onTap: () {
-                             // Navigator.canPop(context) ? Navigator.pop(context) : null;
-                            _auth.signOut();
+                              // Navigator.canPop(context) ? Navigator.pop(context) : null;
+                              _auth.signOut();
                             },
                             title: Text('Logout'),
                             leading: Icon(Icons.exit_to_app_rounded),
-                      ),
-                    )
-                    )
+                          ),
+                        ))
                   ],
                 ),
               )
@@ -274,6 +284,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 
+
+
+  //LOCATION
   Widget userListTileLocation(
       String title, String subtitles, int index, BuildContext context) {
     return Material(
@@ -281,12 +294,70 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       child: InkWell(
         splashColor: Theme.of(context).splashColor,
         child: ListTile(
-            onTap: () {
-              //OVDE POKAZI LOKACIJA KOGA KE CLICK
+            onTap: () async {
+              bool serviceEnabled;
+              LocationPermission permission;
 
-              Navigator.of(context).pushNamed(
-                  WishlistScreen.routeName
-              );
+              // Test if location services are enabled.
+              serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+              permission = await Geolocator.checkPermission();
+
+              if (permission == LocationPermission.denied) {
+                permission = await Geolocator.requestPermission();
+                if (permission == LocationPermission.denied) {
+                  return Future.error('Location permissions are denied');
+                }
+              }
+
+              if (permission == LocationPermission.deniedForever) {
+                // Permissions are denied forever, handle appropriately.
+                return Future.error(
+                    'Location permissions are permanently denied, we cannot request permissions.');
+              }
+
+              // GET PERMISSION FOR THE LOCATION
+              var locationMessage = "";
+              var position = await Geolocator.getCurrentPosition(
+                  desiredAccuracy: LocationAccuracy.high);
+
+              var lastPosition = await Geolocator.getLastKnownPosition();
+              print(lastPosition);
+
+              setState(() {
+                locationMessage = "${position.latitude}, ${position.longitude}";
+              });
+
+
+              //  SHOW THE DIALOG WHEN CLICKED
+              showDialog(context: context, builder: (BuildContext ctx){
+                return AlertDialog(
+                  title: Row(
+                    children:[
+                      Padding(
+                        padding: const EdgeInsets.only(right:  6.0),
+                        child: Image.network(
+                          //location picture PIN
+                          'https://cdn-icons.flaticon.com/png/512/4201/premium/4201973.png?token=exp=1647989894~hmac=8d740cf1be258afd9f7ec9fce37c5aa3',
+                          height: 20,
+                          width: 20,),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Location"),
+                      ),
+                    ],
+                  ),
+                  content: Text("Your location is: \n Longitude: ${position.longitude} \n Latitude: ${position.latitude}"),
+                  actions: [
+                    TextButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text('OK'))
+
+                  ],
+                );
+              });
             },
             title: Text(title),
             subtitle: Text(subtitles),
@@ -343,10 +414,4 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ),
     );
   }
-
-
-
-
 }
-
-
