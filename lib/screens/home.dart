@@ -2,6 +2,7 @@ import 'package:backdrop/app_bar.dart';
 import 'package:backdrop/button.dart';
 import 'package:backdrop/scaffold.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:pizza_angela_store/consts/colors.dart';
@@ -23,23 +24,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List _carouselImages = [
-    'images/carousel1.jpg',
-    'images/carousel2.jpg',
-    'images/carousel3.jpg'
+'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Fcarousel1.jpg?alt=media&token=415ca065-081a-4c47-b773-7926bffb8a2f',
+    'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Fcarousel3.jpg?alt=media&token=8fa2ac3d-1ce8-458c-97ff-e5cb979a6b60',
+    'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Fcarousel2.jpg?alt=media&token=cd3250a4-9c41-488d-9a91-29f3d9b602fa',
   ];
 
   List _swiperImages = [
-    'images/pasta1.jpg',
-    'images/pasta2.jpg',
-    'images/pasta3.jpg',
-    'images/pizza1.jpg'
+    'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Fcezar.jpg?alt=media&token=5776bca5-575e-4a8c-8622-9c1803ae31f5',
+    'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Fbolognese.jpg?alt=media&token=98adc8b1-6e71-4ce1-b86a-7222f0a67249',
+    'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Ffurnagiska.jpg?alt=media&token=cbb3f67a-4e2d-4e74-8e77-e5cbf5a35087',
+
   ];
+
+/*  void fetchImages(String image) async{
+    final ref = FirebaseStorage.instance.ref().child(image);
+    // no need of the file extension, the name will do fine.
+    var url = await ref.getDownloadURL();
+    print(url);
+    _swiperImages.add(url);
+  }*/
 
   @override
   Widget build(BuildContext context) {
 
     final productsData = Provider.of<Products>(context);
+    productsData.FetchProducts();
     final popularItems = productsData.popularProducts;
+
 
     return Scaffold(
       body: Center(
@@ -103,9 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     indicatorBgPadding: 5.0,
                     images: [
 
-                     ExactAssetImage(_carouselImages[0]),
-                     ExactAssetImage(_carouselImages[1]),
-                     ExactAssetImage(_carouselImages[2]),
+                     Image.network(_carouselImages[0],fit: BoxFit.fill,),
+                      Image.network(_carouselImages[1],fit: BoxFit.fill),
+                      Image.network(_carouselImages[2],fit: BoxFit.fill),
                     ],
                   ),
                 ),
@@ -125,12 +136,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 height: 180,
-                child: ListView.builder(itemCount: 4,
+                child: ListView.builder(itemCount: 5,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctx, int index){
-              return CategoryWidget(
-                index: index
-              );
+              return CategoryWidget(index: index);
               }),
               ),
               
@@ -163,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return ClipRRect(borderRadius: BorderRadius.circular(10),
                       child: Container(
                         color: Colors.blueGrey,
-                          child: Image.asset(_swiperImages[index],fit: BoxFit.fill)));
+                          child: Image.network(_swiperImages[index],fit: BoxFit.fill)));
                     },
                   ),
                 ),

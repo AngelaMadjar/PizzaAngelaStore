@@ -1,11 +1,72 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pizza_angela_store/models/product.dart';
 
 class Products with ChangeNotifier {
 
 
-  //privremena baza na produkti
-  final List<Product> _products = [
+  //lista koja ja polnam od baza
+  List<Product> _products = [];
+
+  // GET ALL PRODUCTS FROM FIRESTORE COLLECTION 'products'
+  Future<void> FetchProducts()async {
+
+  await FirebaseFirestore.instance
+      .collection('products')
+      .get()
+      .then((QuerySnapshot productsSnapshot) {
+      _products = [];
+    productsSnapshot.docs.forEach((element) {
+      //for each element in firestore collection products add to the products list above
+      _products.insert(0, Product(
+          id:element.get('productId'),
+          title: element.get('productTitle'),
+          description: element.get('productDescription'),
+          price: double.parse(element.get('price')),
+          imageUrl: element.get('productImage'),
+          productCategoryName: element.get('productCategory'),
+          quantity: int.parse(element.get('productQuantity')),
+          isFavorite: false,
+          isPopular: true));
+    });
+  });
+  }
+  List<Product> get products{
+    return _products;
+  }
+
+
+
+  //get all products for a given categoryName
+  List<Product> findByCategory(String categoryName) {
+    List<Product> _categoryList = _products
+        .where((element) => element.productCategoryName
+        .toLowerCase()
+        .contains(categoryName.toLowerCase()))
+        .toList();
+    return _categoryList;
+  }
+
+  //get popular products based on attribute isPopular
+  List<Product> get popularProducts{
+    return _products.where((element) => element.isPopular).toList();
+  }
+
+  //find  by ID
+  Product findById(String productId){
+    return _products.firstWhere((element) => element.id == productId);
+  }
+
+  List<Product> searchQuery(String searchText) {
+    return _products
+        .where((element) =>
+        element.title.toLowerCase().contains(searchText.toLowerCase()))
+        .toList();
+  }
+
+}
+
+/*  final List<Product> _products = [
     Product(
         id:'Product1',
         title: 'pizza1',
@@ -76,38 +137,4 @@ class Products with ChangeNotifier {
         quantity: 12,
         isFavorite: false,
         isPopular: true),
-  ];
-
-  List<Product> get products{
-    return _products;
-  }
-
-
-  //get all products for a given categoryName
-  List<Product> findByCategory(String categoryName) {
-    List<Product> _categoryList = _products
-        .where((element) => element.productCategoryName
-        .toLowerCase()
-        .contains(categoryName.toLowerCase()))
-        .toList();
-    return _categoryList;
-  }
-
-  //get popular products based on attribute isPopular
-  List<Product> get popularProducts{
-    return _products.where((element) => element.isPopular).toList();
-  }
-
-  //find  by ID
-  Product findById(String productId){
-    return _products.firstWhere((element) => element.id == productId);
-  }
-
-  List<Product> searchQuery(String searchText) {
-    return _products
-        .where((element) =>
-        element.title.toLowerCase().contains(searchText.toLowerCase()))
-        .toList();
-  }
-
-}
+  ];*/

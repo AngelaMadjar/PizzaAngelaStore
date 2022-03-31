@@ -15,7 +15,7 @@ class GlobalMethods{
             Padding(
               padding: const EdgeInsets.only(right:  6.0),
               child: Image.network(
-                'https://cdn-icons.flaticon.com/png/512/4201/premium/4201973.png?token=exp=1647989894~hmac=8d740cf1be258afd9f7ec9fce37c5aa3',
+                'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Ferror_flaticon.png?alt=media&token=2b9f75b9-4ae8-4326-9380-c08bfb58ab58',
                 height: 20,
                 width: 20,),
             ),
@@ -48,7 +48,7 @@ class GlobalMethods{
             Padding(
               padding: const EdgeInsets.only(right:  6.0),
               child: Image.network(
-                'https://cdn-icons.flaticon.com/png/512/4201/premium/4201973.png?token=exp=1647989894~hmac=8d740cf1be258afd9f7ec9fce37c5aa3',
+                'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Ferror_flaticon.png?alt=media&token=2b9f75b9-4ae8-4326-9380-c08bfb58ab58',
                 height: 20,
                 width: 20,),
             ),
@@ -70,6 +70,7 @@ class GlobalMethods{
     });
   }
 
+/*
 
   Future<void> showLocation(String longitude,String latitude, BuildContext context) async {
     showDialog(context: context, builder: (BuildContext ctx){
@@ -79,7 +80,7 @@ class GlobalMethods{
             Padding(
               padding: const EdgeInsets.only(right:  6.0),
               child: Image.network(
-                'https://cdn-icons.flaticon.com/png/512/4201/premium/4201973.png?token=exp=1647989894~hmac=8d740cf1be258afd9f7ec9fce37c5aa3',
+                'https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Flocation_pin.png?alt=media&token=bad65f36-b575-4030-9b15-665ed155a482',
                 height: 20,
                 width: 20,),
             ),
@@ -101,6 +102,7 @@ class GlobalMethods{
     });
   }
 
+*/
 
 
 }

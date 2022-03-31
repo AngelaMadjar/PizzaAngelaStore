@@ -16,10 +16,7 @@ class WishlistEmpty extends StatelessWidget {
           margin: EdgeInsets.only(top: 80),
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.4,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage('/images/empty-wishlist.png'))),
+         child: Image.network('https://firebasestorage.googleapis.com/v0/b/pizzaangela-82e5c.appspot.com/o/productImages%2Fempty-wishlist.png?alt=media&token=1cddf33f-29d0-4cff-97c6-3774b0fd16b4'),
         ),
         Text(
           'Your wishlist is empty',

@@ -1,6 +1,6 @@
 import 'package:pizza_angela_store/consts/colors.dart';
 import 'package:pizza_angela_store/consts/my_icons.dart';
-import 'package:pizza_angela_store/inner_screens/upload_product_form.dart';
+import 'package:pizza_angela_store/screens/upload_product_form.dart';
 import 'package:pizza_angela_store/screens/cart.dart';
 import 'package:pizza_angela_store/screens/feeds.dart';
 import 'package:flutter/material.dart';

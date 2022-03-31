@@ -18,7 +18,7 @@ import 'package:pizza_angela_store/screens/user_state.dart';
 import 'package:pizza_angela_store/screens/wishlist.dart';
 import 'package:provider/provider.dart';
 
-import 'inner_screens/upload_product_form.dart';
+import 'screens/upload_product_form.dart';
 
 /*void main() {
   WidgetsFlutterBinding.ensureInitialized();
