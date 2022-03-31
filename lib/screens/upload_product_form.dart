@@ -439,6 +439,14 @@ class _UploadProductFormState extends State<UploadProductForm> {
                                   child: Text('Pastrmajlija'),
                                   value: 'Pastrmajlija',
                                 ),
+                                DropdownMenuItem<String>(
+                                  child: Text('Specialities'),
+                                  value: 'Specialities',
+                                ),
+                                DropdownMenuItem<String>(
+                                  child: Text('Desserts'),
+                                  value: 'Desserts',
+                                ),
                               ],
                               onChanged: (String? value) {
                                 setState(() {

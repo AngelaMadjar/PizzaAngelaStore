@@ -3,6 +3,8 @@ import 'package:pizza_angela_store/consts/colors.dart';
 import 'package:pizza_angela_store/provider/dark_theme_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/feeds.dart';
+
 class CartEmpty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class CartEmpty extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.06,
           child: RaisedButton(
-              onPressed: () {},
+              onPressed: () {Navigator.of(context).pushNamed(FeedScreen.routeName);},
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                   side: BorderSide(color: Colors.red)),
